@@ -30,7 +30,7 @@ namespace Phinscal.Services
 
         public UserModel Login(string username, string password)
         {
-            return _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+            return _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password)!;
         }
 
         public bool IsUsernameValid(string username)

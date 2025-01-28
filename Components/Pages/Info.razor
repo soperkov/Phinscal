@@ -1,0 +1,43 @@
+﻿@page "/Info"
+
+@rendermode InteractiveServer
+@using Phinscal.Models
+@using Phinscal.Services
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        display: flex;
+        flex-direction: row;
+    }
+
+    container {
+        display: flex;
+        flex-direction: row;
+    }
+
+</style>
+
+<header>
+    <img src="Images/logo.jpg"/>
+    <h2>Sve na jednom mjestu i u jednom uređaju!</h2>
+</header>
+<container>
+    <h3>Blagajna odmah spremna za rad</h3>
+    <dl>
+        <dt><span>&#10023;</span>Isporučujemo blagajnu na željenu lokaciju</dt>
+        <dt><span>&#10023;</span>Bez dodatnih odlazaka u banku dogovorite svoju fiskalnu blagajnu s kartičnim plaćanjem</dt>
+        <dt><span>&#10023;</span>Web sučelje za izmjene cjenika, artikala, izvještaje, dodavanje blagajnika....</dt>
+        <dt><span>&#10023;</span>Račune možete uvijek izdavati i ako se internetska veza prekine</dt>
+        <dt><span>&#10023;</span>Sim kartica dolazi u paketu s blagajnom</dt>
+    </dl>
+    <img src="Images/uredaj.jpg"/>
+</container>
+
+@code {
+
+}

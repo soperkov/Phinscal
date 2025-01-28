@@ -9,7 +9,7 @@
         background-color: #353634;
         height: 100vh;
         width: 100vw;
-        overflow-y: hidden;
+        /* overflow-y: hidden; */
         overflow-x: hidden;
         justify-content: center;
         padding: 2%;
@@ -93,9 +93,9 @@
 
 </style>
 
-<PageTitle>Moviestar Cinema</PageTitle>
+<PageTitle>Placeholder</PageTitle>
 <div class="header-title">
-    <h1 class="title">BLAZORSTAR CINEMA</h1>
+    <h1 class="title">Placeholder</h1>
 </div>
 <div class="container">
     <div class="fiorm-container">
@@ -124,6 +124,26 @@
                 <EditForm Model="registrationModel" OnValidSubmit="Register" FormName="RegistrationForm">
                     <DataAnnotationsValidator />
                     <div>
+                        <label for="name">Korisničko ime:</label>
+                        <InputText id="name" class="form-control" @bind-Value="registrationModel.Username" />
+                        <ValidationMessage For="() => registrationModel.Username" />
+                    </div>
+                    <div>
+                        <label for="password" class="mt-2">Lozinka:</label>
+                        <InputText id="password" type="password" class="form-control" @bind-Value="registrationModel.Password" />
+                        <ValidationMessage For="() => registrationModel.Password" />
+                    </div>
+                    <div>
+                        <label for="passwordConfirm" class="mt-2">Ponovite lozinku:</label>
+                        <InputText id="passwordConfirm" type="password" class="form-control" @bind-Value="registrationModel.ConfirmPassword" />
+                        <ValidationMessage For="() => registrationModel.ConfirmPassword" />
+                    </div>
+                    <div>
+                        <label for="email">E-mail:</label>
+                        <InputText id="email" type="email" class="form-control" @bind-Value="registrationModel.Email" />
+                        <ValidationMessage For="() => registrationModel.Email" />
+                    </div>
+                    <div>
                         <label for="name">Ime:</label>
                         <InputText id="name" class="form-control" @bind-Value="registrationModel.Name" />
                         <ValidationMessage For="() => registrationModel.Name" />
@@ -134,22 +154,16 @@
                         <ValidationMessage For="() => registrationModel.LastName" />
                     </div>
                     <div>
-                        <label for="email">Email:</label>
-                        <InputText id="email" type="email" class="form-control" @bind-Value="registrationModel.Email" />
-                        <ValidationMessage For="() => registrationModel.Email" />
+                        <label for="lastname">Telefon:</label>
+                        <InputText id="name" class="form-control" @bind-Value="registrationModel.PhoneNumber" />
+                        <ValidationMessage For="() => registrationModel.PhoneNumber" />
                     </div>
                     <div>
-                        <label for="password" class="mt-2">Lozinka:</label>
-                        <InputText id="password" type="password" class="form-control" @bind-Value="registrationModel.Password" />
-                        <ValidationMessage For="() => registrationModel.Password" />
+                        <InputCheckbox @bind-Value="IsChecked" onclick="@IsValid" />
+                        <label for="terms">Prihvaćam uvjete korištenja</label>
                     </div>
                     <div>
-                        <label for="passwordConfirm" class="mt-2">Ponovljena lozinka:</label>
-                        <InputText id="passwordConfirm" type="password" class="form-control" @bind-Value="registrationModel.ConfirmPassword" />
-                        <ValidationMessage For="() => registrationModel.ConfirmPassword" />
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary btn-custom">Registriraj se</button>
+                        <button type="submit" class="btn btn-primary btn-custom" disabled="@IsDisabled">Registracija</button>
                     </div>
                 </EditForm>
             </div>
@@ -179,6 +193,14 @@
     private bool IsErrorMessageVisible { get; set; }
     private string ErrorMessage { get; set; }
     private bool IsRegistered { get; set; } = true;
+    private bool IsChecked { get; set; } = false;
+    private bool IsDisabled { get; set; } = true;
+
+    private void IsValid()
+    {
+        IsChecked = !IsChecked;
+        IsDisabled = !IsDisabled;
+    }
 
     private void ToggleRegistration()
     {
@@ -193,16 +215,14 @@
             var result = userService.Login(username, loginPassword);
             if (result != null)
             {
-                //ˇˇUsed to call a Method to fill a DB. Call only first time.ˇˇ
-                //seatService.LoadSeats();
                 LoggedInUser.Id = result.Id;
                 LoggedInUser.User = result;
-                NavManager.NavigateTo("/MovieSelection");
+                NavManager.NavigateTo("/Info");
             }
             else
             {
                 IsErrorMessageVisible = true;
-                ErrorMessage = "Email ili lozinka nisu točni.";
+                ErrorMessage = "Korisničko ime ili lozinka nisu točni.";
                 username = "";
                 loginPassword = "";
             }

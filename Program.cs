@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Phinscal.Components;
+using Phinscal.Models;
 using Phinscal.Services;
 
 namespace Phinscal
@@ -18,6 +19,10 @@ namespace Phinscal
             throw new InvalidOperationException("Connection string CinemaContext not found")));
 
             builder.Services.AddScoped<UserService>();
+
+            builder.Services.AddSingleton<LoggedInUserModel>();
+
+            builder.Services.AddBlazorBootstrap();
 
             var app = builder.Build();
 
