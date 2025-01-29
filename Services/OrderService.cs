@@ -1,0 +1,41 @@
+﻿using Phinscal.Models;
+
+namespace Phinscal.Services
+{
+    public class OrderService
+    {
+        private readonly AppDbContext _context;
+
+        public OrderService(AppDbContext context)
+        {
+            _context = context;
+        }
+        public List<OrderModel> GetOrders()
+        {
+            return _context.Orders.OrderByDescending(o => o.CreatedAt).ToList();
+        }
+
+        public OrderModel? GetOrderById(int id)
+        {
+            return _context.Orders.Find(id);
+        }
+
+        public bool PlaceOrder(OrderFormModel formModel)
+        {
+            var newOrder = new OrderModel
+            {
+                DeliveryAddress = formModel.DeliveryAddress!,
+                DeliveryDate = formModel.DeliveryDate,
+                PaymentMethod = formModel.PaymentMethod!,
+                CardPayment = formModel.CardPayment,
+                InventoryManagement = formModel.InventoryManagement,
+            };
+
+            _context.Orders.Add(newOrder);
+            _context.SaveChanges();
+            return true;
+        }
+    }
+
+}
+

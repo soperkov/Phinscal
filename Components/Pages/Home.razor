@@ -3,13 +3,13 @@
 @rendermode InteractiveServer
 @using Phinscal.Models
 @using Phinscal.Services
+@inject IWebHostEnvironment WebHostEnvironment
 
 <style>
     body {
         background-color: #353634;
         height: 100vh;
         width: 100vw;
-        /* overflow-y: hidden; */
         overflow-x: hidden;
         justify-content: center;
         padding: 2%;
@@ -50,12 +50,19 @@
     }
 
     .form_class {
-        text-align: center;
-        flex-direction: column;
+        display: flex;
+        justify-content: space-between;
+        gap: 100px; 
+        margin: 0 auto; 
     }
 
     .login, .register {
-        margin: 5px 25%;
+        flex: 1; 
+        margin: 0;
+        padding: 20px;
+        border: 2px solid #423e1b;
+        border-radius: 10px;
+        background-color: #2b2b2a;
     }
 
     .or_bor {
@@ -91,11 +98,84 @@
         margin: 18px 18px 18px 18px;
     }
 
+    .modal-dialog {
+        width: 80vw !important;
+    }
+
+    .modal-body {
+        max-height: 60vh;
+        overflow-y: auto; 
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        line-height: 1.6; 
+        color: #ddd; 
+        background-color: #2b2b2a; 
+    }
+
+        .modal-body a {
+            color: #f1c40f; 
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .modal-body a:hover {
+            color: #ffdd57; 
+            text-decoration: none;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+            text-align:left;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background-color: #666;
+            border-radius: 4px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background-color: #2b2b2a;
+        }
+
+    .modal .modal-footer {
+        background-color: #2b2b2a; 
+        border-top: 1px solid #423e1b; 
+        color: #f1c40f;
+        padding: 15px;
+        text-align: center;
+    }
+
+        .modal .modal-footer .btn {
+            background-color: darkgoldenrod;
+            color: black;
+            border: none;
+        }
+
+            .modal .modal-footer .btn:hover {
+                background-color: palegoldenrod; 
+                color: black;
+            }
+
+
 </style>
 
-<PageTitle>Placeholder</PageTitle>
+<PageTitle>PHINSCAL</PageTitle>
+<Modal @ref="modal" class="modal-lg" IsServiceModal="true">
+    <BodyTemplate>
+        @if (current != null)
+        {
+            <div class="modal-body">
+                @TermsAndConditionsHtml 
+            </div>
+        }
+    </BodyTemplate>
+</Modal>
 <div class="header-title">
-    <h1 class="title">Placeholder</h1>
+    <h1 class="title">PHINSCAL</h1>
 </div>
 <div class="container">
     <div class="fiorm-container">
@@ -160,7 +240,8 @@
                     </div>
                     <div>
                         <InputCheckbox @bind-Value="IsChecked" onclick="@IsValid" />
-                        <label for="terms">Prihvaćam uvjete korištenja</label>
+                        <label for="terms">
+                            Prihvaćam <a href="#" @onclick="() => ShowModal(ModalType.Dark)"> uvjete korištenja</a></label>
                     </div>
                     <div>
                         <button type="submit" class="btn btn-primary btn-custom" disabled="@IsDisabled">Registracija</button>
@@ -182,6 +263,7 @@
 
 @code {
     [Inject] private NavigationManager NavManager { get; set; }
+    [Inject] private ModalService ModalService { get; set; } = default!;
     [Inject] private LoggedInUserModel LoggedInUser { get; set; }
     [Inject] private UserService userService { get; set; }
 
@@ -190,11 +272,14 @@
 
     [SupplyParameterFromForm] private RegistrationModel registrationModel { get; set; } = new();
 
+    private Modal modal = default!;
+    private ModalOptions current { get; set; }
     private bool IsErrorMessageVisible { get; set; }
     private string ErrorMessage { get; set; }
     private bool IsRegistered { get; set; } = true;
     private bool IsChecked { get; set; } = false;
     private bool IsDisabled { get; set; } = true;
+    private MarkupString TermsAndConditionsHtml { get; set; }
 
     private void IsValid()
     {
@@ -272,11 +357,43 @@
             username = registrationModel.Username;
             loginPassword = registrationModel.Password;
             LogIn();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-                throw;
-            }
         }
- }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+            throw;
+        }
+    }
+
+    private async Task ShowModal(ModalType modal)
+    {
+        var filePath = Path.Combine(WebHostEnvironment.WebRootPath, "TermsAndConditions.html");
+
+        if (File.Exists(filePath))
+        {
+            var htmlContent = await File.ReadAllTextAsync(filePath);
+            TermsAndConditionsHtml = new MarkupString(htmlContent); 
+        }
+        current = new ModalOptions
+            {
+                Title = "UVJETI KORIŠTENJA USLUGE PREMIUM FISKALNA BLAGAJNA",
+                Message = "",
+                Type = modal,
+                FooterButtonText = "Zatvori",
+                OnFooterButtonClick = EventCallback.Factory.Create(this, async () => await OnHideModalClick()),
+                IsVerticallyCentered = true
+                
+            };
+        await ModalService.ShowAsync(current);
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal?.HideAsync();
+    }
+
+    public class ModalOptions : ModalOption
+    {
+        public EventCallback OnFooterButtonClick { get; set; }
+    }
+}

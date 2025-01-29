@@ -19,6 +19,7 @@ namespace Phinscal
             throw new InvalidOperationException("Connection string CinemaContext not found")));
 
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<OrderService>();
 
             builder.Services.AddSingleton<LoggedInUserModel>();
 
