@@ -20,11 +20,12 @@ namespace Phinscal.Services
             return _context.Orders.Find(id);
         }
 
-        public bool PlaceOrder(OrderFormModel formModel)
+        public bool PlaceOrder(OrderFormModel formModel, int userId)
         {
             var newOrder = new OrderModel
             {
                 DeliveryAddress = formModel.DeliveryAddress!,
+                UserId = userId,
                 DeliveryDate = formModel.DeliveryDate,
                 PaymentMethod = formModel.PaymentMethod!,
                 CardPayment = formModel.CardPayment,

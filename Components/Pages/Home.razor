@@ -39,7 +39,7 @@
         flex-direction: column;
     }
 
-    .form-container { 
+    .form-container {
         text-align: center;
         padding: 20px;
         border: 2px solid #423e1b;
@@ -52,12 +52,12 @@
     .form_class {
         display: flex;
         justify-content: space-between;
-        gap: 100px; 
-        margin: 0 auto; 
+        gap: 100px;
+        margin: 0 auto;
     }
 
     .login, .register {
-        flex: 1; 
+        flex: 1;
         margin: 0;
         padding: 20px;
         border: 2px solid #423e1b;
@@ -69,7 +69,7 @@
         background-color: rgba(1.9, 1.9, 1.9, 0.1);
         height: 0px;
         border: 5px 0 0 0;
-        border: dashed rgba(2.2, 2.2, 2.2, 0.1); 
+        border: dashed rgba(2.2, 2.2, 2.2, 0.1);
         border-radius: 10px;
         margin: 0px;
         padding: 0px;
@@ -89,14 +89,32 @@
         width: 200px;
     }
 
-    .btn-custom:hover {
-        background-color: palegoldenrod;
-        border-radius: 7px;
-        color: black;
-        font-weight: 500;
-        border: 4px solid #423e1b;
-        margin: 18px 18px 18px 18px;
-    }
+        .btn-custom:hover {
+            background-color: palegoldenrod;
+            border-radius: 7px;
+            color: black;
+            font-weight: 500;
+            border: 4px solid #423e1b;
+            margin: 18px 18px 18px 18px;
+        }
+
+        .btn-custom:focus, .btn-custom:active {
+            background-color: palegoldenrod !important;
+            border-radius: 7px !important;
+            color: black;
+            font-weight: 500;
+            border: 4px solid #423e1b !important;
+            margin: 18px 18px 18px 18px;
+        }
+
+        .btn-custom:disabled {
+            background-color: #575224;
+            border-radius: 7px !important; 
+            color: black;
+            font-weight: 500;
+            border: 4px solid #423e1b !important;
+            margin: 18px 18px 18px 18px;
+        }
 
     .modal-dialog {
         width: 80vw !important;
@@ -104,28 +122,28 @@
 
     .modal-body {
         max-height: 60vh;
-        overflow-y: auto; 
+        overflow-y: auto;
         padding: 20px;
         font-family: Arial, sans-serif;
-        line-height: 1.6; 
-        color: #ddd; 
-        background-color: #2b2b2a; 
+        line-height: 1.6;
+        color: #ddd;
+        background-color: #2b2b2a;
     }
 
         .modal-body a {
-            color: #f1c40f; 
+            color: #f1c40f;
             text-decoration: underline;
             font-weight: bold;
         }
 
-        .modal-body a:hover {
-            color: #ffdd57; 
-            text-decoration: none;
-        }
+            .modal-body a:hover {
+                color: #ffdd57;
+                text-decoration: none;
+            }
 
         .modal-body p {
             margin-bottom: 15px;
-            text-align:left;
+            text-align: left;
         }
 
         .modal-body::-webkit-scrollbar {
@@ -142,8 +160,8 @@
         }
 
     .modal .modal-footer {
-        background-color: #2b2b2a; 
-        border-top: 1px solid #423e1b; 
+        background-color: #2b2b2a;
+        border-top: 1px solid #423e1b;
         color: #f1c40f;
         padding: 15px;
         text-align: center;
@@ -156,10 +174,13 @@
         }
 
             .modal .modal-footer .btn:hover {
-                background-color: palegoldenrod; 
+                background-color: palegoldenrod;
                 color: black;
             }
-
+    
+    a {
+        color: darkgoldenrod;
+    }
 
 </style>
 

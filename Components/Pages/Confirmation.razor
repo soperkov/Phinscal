@@ -1,0 +1,105 @@
+﻿@page "/Confirmation"
+
+@rendermode InteractiveServer
+
+<style>
+    body {
+        background-color: #353634;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .clock {
+        position: relative;
+        width: 150px;
+        height: 150px;
+    }
+
+    .outer {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        background: conic-gradient(darkgoldenrod 0deg, #2b2b2a 0deg);
+        transition: background 1s linear;
+    }
+
+    .inner {
+        width: 100px;
+        height: 100px;
+        background-color: #2b2b2a;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .text {
+        color: #ddd;
+        margin: 50px;
+    }
+
+</style>
+
+<div class="container">
+    <div class="text">
+        <h2>Uspješno ste naručili fiskalnu blagajnu.</h2>
+        <h1>Preusmjeravanje za...</h1>
+    </div>
+    <div class="clock">
+        <div class="outer" style="background: conic-gradient(darkgoldenrod @progress, #2b2b2a @progress);">
+            <div class="inner">
+                @countdownClock
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Inject] private NavigationManager NavManager { get; set; }
+    private int countdownClock = 5;
+    private bool countdownStarted = false;
+    private string progress = "360deg"; 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !countdownStarted)
+        {
+            countdownStarted = true;
+            await StartCountdown();
+        }
+    }
+
+    private async Task StartCountdown()
+    {
+        for (int i = countdownClock; i > 0; i--)
+        {
+            await Task.Delay(1000);
+            countdownClock--;
+            UpdateClockFill();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        NavManager.NavigateTo("/", forceLoad: true);
+    }
+
+    private void UpdateClockFill()
+    {
+        int fillAngle = countdownClock * 72; 
+        progress = $"{fillAngle}deg";
+    }
+}

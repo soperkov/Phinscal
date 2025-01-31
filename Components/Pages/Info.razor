@@ -56,11 +56,10 @@
         text-align: left;
     }
 
-    h3 {
-        font-size: 22px;
+    h1 {
         color: darkgoldenrod;
         font-style: italic;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
 
     ul {
@@ -83,6 +82,11 @@
             font-size: 18px;
         }
 
+    dt {
+        font-size: larger;
+        margin-bottom: 15px;
+    }
+
     .device-image {
         max-width: 300px;
         border-radius: 5px;
@@ -90,6 +94,7 @@
 
     /* ORDER BUTTON */
     .order-button {
+        margin-top: 30px !important;
         display: block;
         background-color: darkgoldenrod;
         color: black;
@@ -113,15 +118,14 @@
 
 <!-- HEADER -->
 <div class="header">
-    <img src="Images/logo.jpg" alt="Fiscal Logo" />
+    <img src="Images/logo.png" alt="Fiscal Logo" />
     <h2>Sve na jednom mjestu i u jednom uređaju!</h2>
-    <img src="Images/uredaj.png" alt="Device" class="device-image" />
 </div>
 
 <!-- MAIN CONTENT -->
 <div class="main-container">
     <div class="text-content">
-        <h3>Blagajna odmah spremna za rad</h3>
+        <h1>Blagajna odmah spremna za rad</h1>
         <dl>
             <dt><span>&#10023;</span> Isporučujemo blagajnu na željenu lokaciju</dt>
             <dt><span>&#10023;</span> Bez dodatnih odlazaka u banku dogovorite svoju fiskalnu blagajnu s kartičnim plaćanjem</dt>
@@ -130,6 +134,9 @@
             <dt><span>&#10023;</span> Sim kartica dolazi u paketu s blagajnom</dt>
         </dl>
         <a class="order-button" @onclick="OrderDetails">NARUČI</a>
+    </div>
+    <div class="img-container">
+        <img src="Images/uredaj.png" alt="Device" class="device-image" />
     </div>
 </div>
 

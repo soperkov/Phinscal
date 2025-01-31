@@ -5,10 +5,22 @@
 @using Phinscal.Services
 
 <style>
+    body {
+        background-color: #353634;
+        height: 100vh;
+        width: 100vw;
+        overflow-x: hidden;
+        justify-content: center;
+        padding: 2%;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
     .order-container {
         max-width: 600px;
         margin: auto;
-        padding: 20px;
+        padding: 40px;
         border: 2px solid #423e1b;
         border-radius: 10px;
         background-color: #2b2b2a;
@@ -33,6 +45,7 @@
         color: #ddd;
         border: 1px solid #80772b;
         border-radius: 5px;
+        flex: 1;
     }
 
     .checkbox-group {
@@ -40,6 +53,8 @@
         flex-direction: column;
         gap: 5px;
         margin-top: 10px;
+        margin-bottom: 10px;
+        align-items: start;
     }
 
     .checkbox-group label {
@@ -68,8 +83,9 @@
 <div class="order-container">
     <h2>Naruči Fiskalnu Blagajnu</h2>
 
-    <EditForm Model="@orderForm" OnValidSubmit="SubmitOrder">
-        <!-- Checkboxes -->
+    <EditForm Model="@orderForm" OnValidSubmit="SubmitOrder" FormName="OrderForm">
+        <DataAnnotationsValidator />
+
         <label>Dodatne opcije:</label>
         <div class="checkbox-group">
             <label>
@@ -81,13 +97,15 @@
         </div>
 
         <label for="address">Adresa dostave *:</label>
-        <InputText id="address" class="form-control" @bind-Value="orderForm.DeliveryAddress" required />
+        <InputText id="address" class="form-control" @bind-Value="orderForm.DeliveryAddress" />
+        <ValidationMessage For="@(() => orderForm.DeliveryAddress)" />
 
         <label for="date">Datum dostave:</label>
-        <InputDate id="date" class="form-control" @bind-Value="orderForm.DeliveryDate" required />
+        <InputDate id="date" class="form-control" @bind-Value="orderForm.DeliveryDate" />
+        <ValidationMessage For="@(() => orderForm.DeliveryDate)" />
 
         <label>Način plaćanja:</label>
-        <select @bind="orderForm.PaymentMethod">
+        <select @bind="orderForm.PaymentMethod" class="form-control">
             <option value="paypal">PayPal</option>
             <option value="credit_card">Kreditna kartica</option>
             <option value="bank_transfer">Bankovni prijenos</option>
@@ -98,16 +116,19 @@
 
         <button type="submit" class="order-btn">Naruči</button>
     </EditForm>
+
 </div>
 
 @code {
-    private OrderFormModel orderForm = new();
+    [Inject] private LoggedInUserModel loggedInUser { get; set; } = default!;
     [Inject] private OrderService orderService { get; set; } = default!;
     [Inject] private NavigationManager NavManager { get; set; } = default!;
 
+    private OrderFormModel orderForm = new();
+
     private void SubmitOrder()
     {
-        orderService.PlaceOrder(orderForm);
+        orderService.PlaceOrder(orderForm, loggedInUser.Id);
         NavManager.NavigateTo("/Confirmation"); 
     }
 

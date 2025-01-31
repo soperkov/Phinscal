@@ -11,7 +11,6 @@ namespace Phinscal.Models
         [DataType(DataType.Date)]
         public DateTime DeliveryDate { get; set; } = DateTime.Today + TimeSpan.FromDays(5);
 
-        [Required(ErrorMessage = "Molimo izaberite način plaćanja.")]
         public string? PaymentMethod { get; set; } = "cash";
 
         public bool CardPayment { get; set; }
