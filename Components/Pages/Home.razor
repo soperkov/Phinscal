@@ -314,6 +314,23 @@
         IsErrorMessageVisible = false;
     }
 
+    protected override void OnInitialized()
+    {
+        if (userService.IsUsernameValid("admin"))
+        {
+            var admin = new UserModel
+                {
+                    Username = "admin",
+                    Name = "Administrator",
+                    LastName = "",
+                    Password = "admin",
+                    Email = "admin@phinscal.hr",
+                    PhoneNumber = "0911111111"
+                };
+            userService.CreateUser(admin);
+        }
+    }
+
     private void LogIn()
     {
         try
@@ -323,7 +340,14 @@
             {
                 LoggedInUser.Id = result.Id;
                 LoggedInUser.User = result;
-                NavManager.NavigateTo("/Info");
+                if (LoggedInUser.User.Username == "admin")
+                {
+                    NavManager.NavigateTo("/AdminInfo");
+                }
+                else
+                {
+                    NavManager.NavigateTo("/Info");
+                }
             }
             else
             {

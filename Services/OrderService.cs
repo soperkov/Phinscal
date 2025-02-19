@@ -36,6 +36,17 @@ namespace Phinscal.Services
             _context.SaveChanges();
             return true;
         }
+
+        public void DeleteOrder(int orderId)
+        {
+            var order = GetOrderById(orderId);
+
+            if (order != null) 
+            {
+                _context.Orders.Remove(order);
+                _context.SaveChanges();
+            }
+        }
     }
 
 }

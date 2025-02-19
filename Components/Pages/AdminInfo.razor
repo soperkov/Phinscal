@@ -1,0 +1,303 @@
+﻿@page "/AdminInfo"
+
+@rendermode InteractiveServer
+@using Phinscal.Models
+@using Phinscal.Services
+
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #353634;
+        color: palegoldenrod;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1100px;
+        padding: 20px;
+    }
+
+    .logout-btn {
+        background-color: darkgoldenrod;
+        border: 2px solid #423e1b;
+        color: black;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, border 0.3s ease;
+    }
+
+        .logout-btn:hover {
+            background-color: palegoldenrod;
+            border-color: darkgoldenrod;
+        }
+
+
+        .header img {
+            max-height: 120px;
+        }
+
+        .header h2 {
+            font-size: 26px;
+            font-style: italic;
+            color: palegoldenrod;
+            text-align: center;
+            flex: 1;
+        }
+
+    /* TABLE */
+    /* Dark Themed Table */
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2b2b2a;
+    color: palegoldenrod;
+    border: 2px solid #423e1b;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.orders-table thead {
+    background-color: #423e1b;
+    color: palegoldenrod;
+    font-weight: bold;
+}
+
+.orders-table thead th {
+    padding: 12px;
+    border-bottom: 2px solid darkgoldenrod;
+    text-align: left;
+}
+
+.orders-table tbody tr {
+    border-bottom: 1px solid darkgoldenrod;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.orders-table tbody tr:hover {
+    background-color: rgba(218, 165, 32, 0.2); 
+}
+
+.orders-table tbody td {
+    padding: 10px;
+    border-right: 1px solid darkgoldenrod;
+}
+
+.orders-table tbody td:last-child {
+    border-right: none;
+}
+
+.orders-table .btn-action {
+    background-color: darkgoldenrod;
+    border: 2px solid #423e1b;
+    color: black;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.orders-table .btn-action:hover {
+    background-color: palegoldenrod;
+    border-color: darkgoldenrod;
+}
+
+.orders-table .text-center {
+    text-align: center;
+}
+
+    /* MODAL */
+    /* Dark Modal */
+    .dark-modal .modal-content {
+        background-color: #2b2b2a;
+        color: palegoldenrod;
+        border-radius: 10px;
+        border: 2px solid #423e1b;
+    }
+
+    .dark-modal .modal-header {
+        background-color: #423e1b;
+        color: palegoldenrod;
+        border-bottom: 2px solid darkgoldenrod;
+    }
+
+        .dark-modal .modal-header h3 {
+            color: palegoldenrod !important;
+            font-weight: bold;
+        }
+
+    .dark-modal .modal-body {
+        font-size: 18px;
+        color: palegoldenrod;
+        padding: 20px;
+    }
+
+    .dark-modal .modal-footer {
+        background-color: #423e1b;
+        border-top: 1px solid darkgoldenrod;
+        text-align: center;
+    }
+
+    .dark-modal .btn-close {
+        color: palegoldenrod;
+        font-size: 20px;
+    }
+
+    .dark-modal .btn-custom {
+        background-color: darkgoldenrod;
+        border: 2px solid #423e1b;
+        color: black;
+        font-weight: bold;
+        padding: 8px 20px;
+        border-radius: 5px;
+    }
+
+        .dark-modal .btn-custom:hover {
+            background-color: palegoldenrod;
+            border-color: darkgoldenrod;
+        }
+
+
+</style>
+
+<Modal @ref="modal" IsServiceModal="true" class="dark-modal">
+    <HeaderTemplate>
+        <h3>@current.Title</h3>
+    </HeaderTemplate>
+    <BodyTemplate>
+        @if (selectedUser != null)
+        {
+            <div class="user-details">
+                <div><span class="label">Korisničko ime:</span> <span class="value">@selectedUser.Username</span></div>
+                <div><span class="label">E-mail:</span> <span class="value">@selectedUser.Email</span></div>
+                <div><span class="label">Ime:</span> <span class="value">@selectedUser.Name</span></div>
+                <div><span class="label">Prezime:</span> <span class="value">@selectedUser.LastName</span></div>
+                <div><span class="label">Telefon:</span> <span class="value">@selectedUser.PhoneNumber</span></div>
+            </div>
+        }
+        else
+        {
+            <p class="error-text">Korisnik nije pronađen.</p>
+        }
+    </BodyTemplate>
+    <FooterTemplate>
+        <button class="btn btn-custom" @onclick="CloseModal">Zatvori</button>
+    </FooterTemplate>
+</Modal>
+
+
+<!-- HEADER -->
+<div class="header">
+    <img src="Images/logo.png" alt="Fiscal Logo" />
+    <h2>Sve na jednom mjestu i u jednom uređaju!</h2>
+    <div>
+        <button class="logout-btn" @onclick="Logout">Odjava</button>
+    </div>
+</div>
+
+
+<!-- BODY -->
+<div class="table-responsive">
+    <table class="orders-table">
+        <thead>
+            <tr>
+                <th scope="col">Broj narudžbe</th>
+                <th scope="col">Vrijeme narudžbe</th>
+                <th scope="col">Korisničko ime</th>
+                <th scope="col">Kartično plaćanje</th>
+                <th scope="col">Robno materijalno poslovanje</th>
+                <th scope="col">Metoda plaćanja</th>
+                <th scope="col">Adresa dostave</th>
+                <th scope="col">Datum dostave</th>
+                <th scope="col" class="text-center">Akcije</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in orders)
+            {
+                var user = userService.GetUser(order.UserId);
+                <tr>
+                    <td data-label="Broj narudžbe">@order.Id</td>
+                    <td data-label="Vrijeme narudžbe">@order.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td data-label="Korisničko ime">@(user != null ? user.Username : "Unknown")</td>
+                    <td data-label="Kartično plaćanje">@(order.CardPayment ? "✔" : "✘")</td>
+                    <td data-label="Robno poslovanje">@(order.InventoryManagement ? "✔" : "✘")</td>
+                    <td data-label="Metoda plaćanja">@order.PaymentMethod</td>
+                    <td data-label="Adresa dostave">@order.DeliveryAddress</td>
+                    <td data-label="Datum dostave">@order.DeliveryDate.ToString("dd.MM.yyyy")</td>
+                    <td class="text-center">
+                        <button class="btn-action" @onclick="() => ShowUserDetails(order.UserId)">Detalji</button>
+                        <button class="btn-action" @onclick="() => DeleteOrder(order.Id)">Obriši</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@code {
+
+    [Inject] private NavigationManager NavManager { get; set; }
+    [Inject]private UserService userService { get; set; }
+    [Inject]private OrderService orderService { get; set; }
+    [Inject]private ModalService modalService { get; set; }
+
+    private List<OrderModel> orders = new();
+    private Modal modal = default!;
+    private ModalOption current = default!;
+    private UserModel? selectedUser;
+
+    protected override void OnInitialized()
+    {
+        LoadOrders();
+        base.OnInitialized();
+    }
+
+    private async Task ShowUserDetails(int userId)
+    {
+        selectedUser = userService.GetUser(userId);
+
+        current = new ModalOption
+            {
+                Title = selectedUser != null ? $"Detalji korisnika: {selectedUser.Username}" : "Korisnik nije pronađen",
+                FooterButtonText = "Zatvori",
+                IsVerticallyCentered = true
+            };
+
+        await modal.ShowAsync();
+        StateHasChanged();
+    }
+
+    private void LoadOrders()
+    {
+        orders = orderService.GetOrders();
+        StateHasChanged();
+    }
+
+    private void DeleteOrder(int orderId)
+    {
+        orderService.DeleteOrder(orderId);
+        LoadOrders(); 
+    }
+
+    private async Task CloseModal()
+    {
+        await modal.HideAsync();
+    }
+
+    private void Logout()
+    {
+        NavManager.NavigateTo("/", forceLoad: true);
+    }
+
+}
